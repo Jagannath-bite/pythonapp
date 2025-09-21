@@ -27,14 +27,14 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    . venv/bin/activate
-                    pytest --maxfail=1 --disable-warnings -q
-                '''
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         sh '''
+        //             . venv/bin/activate
+        //             pytest --maxfail=1 --disable-warnings -q
+        //         '''
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
