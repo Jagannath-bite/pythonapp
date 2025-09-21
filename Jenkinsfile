@@ -19,7 +19,7 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 sh '''
-                   sudo python3 -m venv venv
+                   python3 -m venv venv
                     . venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
