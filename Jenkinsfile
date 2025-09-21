@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "my-python-app"
-        DOCKER_REGISTRY = "docker.io/your-dockerhub-username"
+        DOCKER_IMAGE = "pythonapp"
+        DOCKER_REGISTRY = "docker.io/jagannath239"
     }
 
     stages {
