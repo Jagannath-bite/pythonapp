@@ -1,17 +1,19 @@
 # Use official Python image
 FROM python:3.11-slim
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Copy requirements.txt first to leverage caching
+# Copy requirements and install
 COPY requirements.txt .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app source
-COPY . .
+# Copy application code
+COPY app.py .
 
-# Command to run the app
+# Expose port
+EXPOSE 5000
+
+# Run the app
 CMD ["python", "app.py"]
+
