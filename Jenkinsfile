@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "pythonapp"
+        DOCKER_IMAGE = "jagannath239/pythonapp:latest"
         DOCKER_REGISTRY = "docker.io/jagannath239"
     }
 
@@ -71,3 +71,4 @@ pipeline {
         }
     }
 }
+
