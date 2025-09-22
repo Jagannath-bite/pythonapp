@@ -6,13 +6,11 @@ pipeline {
         DOCKER_IMAGE_NAME = 'jagannath239/pythonapp'
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git url: 'https://github.com/Jagannath-bite/pythonapp.git', branch: 'main'
-            }
-        }
-
+   stage('Checkout Code') {
+    steps {
+        git branch: 'main', url: 'https://github.com/Jagannath-bite/pythonapp.git'
+    }
+}
         stage('Build Docker Image') {
             steps {
                 script {
@@ -42,3 +40,4 @@ pipeline {
         }
     }
 }
+
