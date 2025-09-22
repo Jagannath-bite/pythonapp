@@ -2,73 +2,43 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "jagannath239/pythonapp:latest"
-        DOCKER_REGISTRY = "docker.io/jagannath239"
+        DOCKER_HUB_CREDENTIALS = 'dockerhubcred' // the ID you created
+        DOCKER_IMAGE_NAME = 'jagannath239/pythonapp'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Use GitHub credentials
-                git branch: 'main',
-                    url: 'https://github.com/Jagannath-bite/pythonapp.git',
-                    credentialsId: 'github-creds'
+                git url: 'https://github.com/Jagannath-bite/pythonapp.git', branch: 'main'
             }
         }
-
-        stage('Setup Python Environment') {
-            steps {
-                sh '''
-                   python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
-            }
-        }
-
-        // stage('Run Tests') {
-        //     steps {
-        //         sh '''
-        //             . venv/bin/activate
-        //             pytest --maxfail=1 --disable-warnings -q
-        //         '''
-        //     }
-        // }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t $DOCKER_IMAGE:latest ."
+                    docker.build("${DOCKER_IMAGE_NAME}:latest")
                 }
             }
         }
 
-        stage('Push to Registry') {
+        stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds',
-                                                 usernameVariable: 'DOCKER_USER',
-                                                 passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag $DOCKER_IMAGE:latest $DOCKER_REGISTRY/$DOCKER_IMAGE:latest
-                        docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:latest
-                    '''
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        echo "Logged in to Docker Hub"
+                    }
                 }
             }
         }
-    }
 
-    post {
-        always {
-            echo "Pipeline finished!"
-        }
-        success {
-            echo "Build succeeded ✅"
-        }
-        failure {
-            echo "Build failed ❌"
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        docker.image("${DOCKER_IMAGE_NAME}:latest").push()
+                    }
+                }
+            }
         }
     }
 }
-
