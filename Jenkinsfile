@@ -2,15 +2,17 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'dockerhubcred' // the ID you created
+        DOCKER_HUB_CREDENTIALS = 'dockerhubcred' // the ID you created in Jenkins
         DOCKER_IMAGE_NAME = 'jagannath239/pythonapp'
     }
 
-   stage('Checkout Code') {
-    steps {
-        git branch: 'main', url: 'https://github.com/Jagannath-bite/pythonapp.git'
-    }
-}
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Jagannath-bite/pythonapp.git'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -40,4 +42,3 @@ pipeline {
         }
     }
 }
-
