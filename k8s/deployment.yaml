@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pythonapp-deployment
+  namespace: pythonapp
+  labels:
+    app: pythonapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pythonapp
+  template:
+    metadata:
+      labels:
+        app: pythonapp
+    spec:
+      containers:
+      - name: pythonapp
+        # Jenkins will replace REPLACE_IMAGE_URI with the actual ECR image URI
+        image: REPLACE_IMAGE_URI
+        ports:
+        - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      # optional: include imagePullSecrets if nodes/containers need them
+      # imagePullSecrets:
+      # - name: ecr-pull-secret

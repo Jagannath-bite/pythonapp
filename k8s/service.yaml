@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pythonapp-svc
+  namespace: pythonapp
+spec:
+  selector:
+    app: pythonapp
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  type: ClusterIP
